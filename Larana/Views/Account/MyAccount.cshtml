@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "My Account";
+}
+
+<div class="container">
+    <div class="account-wrapper">
+        <h2 class="account-title">My Account</h2>
+        <p class="welcome-message">Welcome back, <strong>@User.Identity.Name</strong></p>
+        <div class="account-actions">
+            <a href="@Url.Action("Edit", "Account")" class="btn btn-edit">Edit Account</a>
+            <a href="@Url.Action("ViewOrders", "Account")" class="btn btn-orders">View Orders</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General container styling */
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Account wrapper styling */
+    .account-wrapper {
+        width: 100%;
+        max-width: 450px;
+        background: linear-gradient(to bottom right, #f9f9f9, #ffffff);
+        padding: 40px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    /* Title styling */
+    .account-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #007BFF;
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+    }
+
+    /* Welcome message styling */
+    .welcome-message {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 25px;
+    }
+
+    /* Button styling */
+    .account-actions .btn {
+        display: inline-block;
+        width: 80%;
+        background-color: #007BFF;
+        color: #fff;
+        text-align: center;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 25px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none; /* Remove underline */
+        margin-bottom: 15px; /* Space between buttons */
+    }
+
+        .account-actions .btn:hover {
+            background-color: #0056b3;
+            text-decoration: none; /* Ensure underline is removed on hover */
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .account-wrapper {
+            padding: 30px 20px;
+            max-width: 90%;
+        }
+
+        .account-title {
+            font-size: 24px;
+        }
+
+        .account-actions .btn {
+            width: 100%;
+            padding: 10px 15px;
+        }
+    }
+</style>

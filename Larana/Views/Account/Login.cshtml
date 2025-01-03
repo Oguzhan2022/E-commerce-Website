@@ -1,0 +1,113 @@
+﻿@model Larana.Models.User
+
+<div class="container">
+    <div class="form-wrapper">
+        <h2 class="form-title">Login</h2>
+        @ViewBag.Message
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Username, "Username")
+                @Html.TextBox("username", null, new { @class = "form-control", placeholder = "Enter Username", required = "required" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, "Password")
+                @Html.Password("password", null, new { @class = "form-control", placeholder = "Enter Password", required = "required" })
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        }
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Register", "Account")" class="custom-link">Don't have an account? Register here</a>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* Center the container and set max width */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form wrapper styling */
+.form-wrapper {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title styling */
+.form-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Input field styling */
+.form-control {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styling */
+.btn {
+    width: 100%;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Link styling */
+.custom-link {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.custom-link:hover {
+    color: #0056b3;
+    text-decoration: none; /* Prevent underline on hover */
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .form-wrapper {
+        max-width: 100%;
+    }
+}
+
+</style>

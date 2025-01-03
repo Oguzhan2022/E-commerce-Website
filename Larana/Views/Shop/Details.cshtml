@@ -1,0 +1,301 @@
+﻿<div class="product-page">
+    <div class="product-left">
+        <div class="product-main-image">
+            <img src="@Url.Content("~/" + Model.PhotoPath)" alt="@Model.Name">
+        </div>
+    </div>
+
+    <div class="product-right">
+        <h1 class="product-title">@Model.Name</h1>
+        <h2 class="product-price">@string.Format("{0:N}", Model.Price) TL</h2>
+        <h4 class="product-brand">Brand: @Model.Brand</h4>
+        <h4 class="product-category">Category: @Model.Category</h4>
+        <h4 class="product-stock" id="stock-count">Stock: @Model.Stock</h4>
+
+        <div class="product-actions">
+            @if (User.Identity.IsAuthenticated)
+            {
+<button class="btn btn-add-to-cart" onclick="virtualAddToCart(@Model.Id, 1, @Model.Stock)">Add to Cart</button> }
+            else
+            {
+<button class="btn btn-add-to-cart" disabled>Login to Add to Cart</button>            }
+        </div>
+
+        <div class="product-info-box">
+            <h4>Delivery Information</h4>
+            <p>Fast delivery options available!</p>
+        </div>
+    </div>
+</div>
+
+<div class="related-products">
+    <h3>Related Products</h3>
+    <div class="products">
+        @foreach (var product in ViewBag.RelatedProducts)
+        {
+<div class="product">
+    <a href="@Url.Action("Details", "Shop", new { id = product.Id })">
+        <img class="sneaker" src="@Url.Content("~/" + product.PhotoPath)" alt="@product.Name" />
+        <div class="description">
+            <h5>@product.Name</h5>
+            <h4>@string.Format("{0:N}", product.Price) TL</h4>
+        </div>
+    </a>
+</div>}
+    </div>
+</div>
+
+<script>
+    function virtualAddToCart(productId, quantity, initialStock) {
+        const stockCountElement = document.getElementById('stock-count');
+        const addToCartButton = document.querySelector('.btn-add-to-cart');
+
+        const currentStock = parseInt(stockCountElement.textContent.replace('Stock: ', ''));
+        if (currentStock <= 0 || quantity > currentStock) {
+            alert("This product is out of stock!");
+            return;
+        }
+
+        const newStock = currentStock - quantity;
+        stockCountElement.textContent = `Stock: ${newStock}`;
+
+        if (newStock <= 0) {
+            addToCartButton.disabled = true;
+            addToCartButton.textContent = 'Out of Stock';
+        }
+
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Shop")',
+            type: 'POST',
+            data: { productId: productId, quantity: quantity },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to add product to cart.");
+            }
+        });
+    }
+</script>
+
+
+
+
+<style>
+    /* General Page Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    /* Product Page Styling */
+    .product-page {
+        display: flex;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-left {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .product-main-image img {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .product-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 28px;
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .product-brand,
+    .product-category {
+        font-size: 18px;
+        color: #555;
+    }
+
+    .product-stock {
+        font-size: 18px;
+        color: #555;
+        margin: 10px 0;
+    }
+
+    /* Button Styling */
+    .btn-add-to-cart {
+        background-color: #007BFF;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .btn-add-to-cart:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-add-to-cart:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+    /* Styling for alertify-like notification */
+    .alertify {
+        background-color: #f0f0f0;
+        color: #333;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 10px auto;
+        max-width: 400px;
+    }
+
+    /* Related Products Section */
+    .related-products {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+        .related-products h3 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .related-products .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .related-products .product {
+            flex: 1 1 calc(20% - 20px);
+            max-width: calc(20% - 20px);
+            box-sizing: border-box;
+            text-align: left;
+            border: 1px solid #007BFF;
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+            margin: 10px;
+        }
+
+            .related-products .product:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            }
+
+            .related-products .product img {
+                width: 100%;
+                max-height: 250px;
+                object-fit: contain;
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+
+        .related-products .description {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+            .related-products .description h5 {
+                font-size: 16px;
+                color: #333;
+                margin: 5px 0;
+                font-weight: bold;
+            }
+
+            .related-products .description h4 {
+                font-size: 18px;
+                font-weight: bold;
+                color: #007BFF;
+                margin-top: 5px;
+            }
+
+    /* Responsive Design */
+    @@media (max-width: 1200px) {
+        .related-products .product {
+            flex: 1 1 calc(25% - 20px);
+            max-width: calc(25% - 20px);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .product-page {
+            flex-direction: column;
+        }
+
+        .product-left,
+        .product-right {
+            flex: 1;
+        }
+
+        .product-main-image img {
+            max-width: 100%;
+        }
+
+        .related-products .product {
+            flex: 1 1 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .related-products .product {
+            flex: 1 1 calc(100% - 20px);
+            max-width: calc(100% - 20px);
+        }
+    }
+
+    /* Remove underline from all links */
+    a {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+    }
+</style>
+
+

@@ -1,0 +1,115 @@
+﻿@model Larana.Models.User
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="page-title">Create Admin User</h2>
+
+<div class="form-container">
+    @using (Html.BeginForm("CreateUser", "Admin", FormMethod.Post))
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Username, null, new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Username, null, new { @class = "validation-message" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, null, new { @class = "form-label" })
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Email, null, new { @class = "validation-message" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, null, new { @class = "form-label" })
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Password, null, new { @class = "validation-message" })
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Create Admin User</button>
+        </div>
+    }
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        color: #007bff;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: border-color 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+    .validation-message {
+        font-size: 0.875rem;
+        color: #dc3545;
+        margin-top: 5px;
+    }
+
+    .form-actions {
+        text-align: center;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+</style>

@@ -1,0 +1,152 @@
+﻿@model Larana.Models.User
+
+<div class="container">
+    <div class="form-wrapper">
+        <h2 class="form-title">Edit Account</h2>
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-info text-center">
+                @ViewBag.Message
+            </div>
+        }
+        @using (Html.BeginForm("Edit", "Account", FormMethod.Post))
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Username, "Username")
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", required = "required", placeholder = "Enter your username" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, "Email")
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = "required", placeholder = "Enter your email" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Address, "Address")
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Enter your address" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhoneNumber, "Phone Number")
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Enter your phone number" })
+            </div>
+            <hr />
+            <h4 class="password-title">Password Update (Optional)</h4>
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" class="form-control" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter new password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+        }
+    </div>
+</div>
+
+<style>
+/* Overall container styling */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Form wrapper styling */
+.form-wrapper {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Form title styling */
+.form-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Password update title styling */
+.password-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+    margin-top:10px
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Input field styling */
+.form-control {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styling */
+.btn {
+    display: inline-block;
+    width: 100%;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Info alert styling */
+.alert-info {
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+    color: #0d47a1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 30px 20px;
+    }
+
+    .form-title {
+        font-size: 24px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+</style>

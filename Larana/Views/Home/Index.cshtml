@@ -1,0 +1,62 @@
+﻿<section id="main">
+    <div class="content">
+        <h4>New Collection</h4>
+        <h2>Trending Sneakers</h2>
+        <h1>Limited Stock Available</h1>
+        <p>Get ready for shopping with amazing deals!</p>
+        <a href="@Url.Action("Index", "Shop")">
+            <button class="btn">Shop Now</button>
+        </a>
+    </div>
+</section>
+
+<section id="product-section">
+    <h2>New Products</h2>
+    <div class="products">
+        @foreach (var product in ViewBag.NewProducts)
+        {
+            <div class="product">
+                <a href="@Url.Action("Details", "Shop", new { id = product.Id })">
+                    <img class="sneaker" src="@Url.Content("~/" + product.PhotoPath)" alt="@product.Name">
+                    <div class="description">
+                        <span>@product.Brand</span>
+                        <h5>@product.Name</h5>
+                        <h4>@string.Format("{0:N}", product.Price) TL</h4>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<section id="free-shipping-banner">
+    <h2>Free Shipping</h2>
+</section>
+
+<section id="product-section">
+    <h2>Best Seller</h2>
+    <div class="products">
+        @foreach (var product in ViewBag.BestSellers)
+        {
+            <div class="product">
+                <a href="@Url.Action("Details", "Shop", new { id = product.Id })">
+                    <img class="sneaker" src="@Url.Content("~/" + product.PhotoPath)" alt="@product.Name">
+                    <div class="description">
+                        <span>@product.Brand</span>
+                        <h5>@product.Name</h5>
+                        <h4>@string.Format("{0:N}", product.Price) TL</h4>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .product a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+</style>

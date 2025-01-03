@@ -1,0 +1,237 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="orders-container">
+    <h1 class="page-title">My Orders</h1>
+
+    @if (!Model.Any())
+    {
+        <p class="empty-message">You have no orders yet.</p>
+    }
+    else
+    {
+        foreach (var order in Model)
+        {
+            <div class="order-card">
+                <div class="order-summary">
+                    <span class="order-id"><strong>Order ID:</strong> <span class="highlight-id">@order.Id</span></span>
+                    <span class="order-date"><strong>Date:</strong> <span class="highlight-date">@order.OrderDate.ToString("MM/dd/yyyy")</span></span>
+                    <span class="order-status"><strong>Status:</strong> <span class="highlight-status @order.Status">@order.Status</span></span>
+                    <span class="order-total"><strong>Total:</strong> <span class="highlight-total">@string.Format("{0:C}", order.TotalAmount)</span></span>
+                </div>
+                <button class="btn btn-primary toggle-details" data-target="#details-@order.Id">Details</button>
+
+                <div class="order-details" id="details-@order.Id" style="display: none;">
+                    <div class="details-container">
+                        <h4 class="details-title">Order Details</h4>
+                        <div class="order-recipient">
+                            <p><strong>Recipient Name:</strong> @order.RecipientName</p>
+                            <p><strong>Shipping Company:</strong> @order.ShippingCompany</p>
+                            <p><strong>Address:</strong> @order.Address</p>
+                            <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
+                        </div>
+                        <h4 class="details-title">Products</h4>
+                        <div class="product-list">
+                            @foreach (var detail in order.OrderDetails)
+                            {
+                                <div class="product-item" onclick="location.href='@Url.Action("Details", "Shop", new { id = detail.ProductId })'">
+                                    <div class="product-info">
+                                        <p class="product-name">
+                                            <strong>Product:</strong>
+                                            <span class="product-link">@detail.ProductName</span>
+                                        </p>
+                                        <p class="product-quantity"><strong>Quantity:</strong> @detail.Quantity</p>
+                                        <p class="product-price"><strong>Unit Price:</strong> @string.Format("{0:C}", detail.UnitPrice)</p>
+                                        <p class="product-subtotal"><strong>Subtotal:</strong> @string.Format("{0:C}", detail.Quantity * detail.UnitPrice)</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-details").forEach(button => {
+            button.addEventListener("click", function () {
+                const targetId = this.getAttribute("data-target");
+                const detailsRow = document.querySelector(targetId);
+
+                if (detailsRow.style.display === "block") {
+                    detailsRow.style.display = "none";
+                    this.textContent = "Details";
+                } else {
+                    document.querySelectorAll(".order-details").forEach(details => {
+                        details.style.display = "none";
+                    });
+                    document.querySelectorAll(".toggle-details").forEach(btn => {
+                        btn.textContent = "Details";
+                    });
+
+                    detailsRow.style.display = "block";
+                    this.textContent = "Hide Details";
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .orders-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        text-align: center;
+        color: #007bff;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .empty-message {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        background-color: #fefefe;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+    }
+
+    .order-summary {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+        .order-summary span {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+    .highlight-id {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .highlight-date {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .highlight-status {
+        font-weight: bold;
+    }
+
+        .highlight-status.Completed {
+            color: #28a745;
+        }
+
+        .highlight-status.Pending {
+            color: #ffc107;
+        }
+
+        .highlight-status.Cancelled {
+            color: #dc3545;
+        }
+
+    .highlight-total {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .order-details {
+        display: none;
+        margin-top: 15px;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .details-container {
+        padding: 10px;
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .product-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+        .product-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .product-info p {
+        margin: 5px 0;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .product-name {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .details-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+</style>

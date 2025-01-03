@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Larana</title>
+    <link rel="icon" type="image/x-icon" href="~/img/icon1.png" />
+    <link rel="stylesheet" href="~/styles/style.css" />
+</head>
+<body>
+    <section id="header">
+        <a href="~/Home/Index">
+            <img src="~/img/logo.png" alt="Larana Logo" width="140" height="50" />
+        </a>
+        <div id="nav1">
+            <ul id="navbar">
+                <li>
+                    <a class="active" href="~/">Home</a>
+                </li>
+                <li>
+                    <a href="~/Shop/Index">Shop</a>
+                </li>
+                <li>
+                    <a href="~/Contact">Contact</a>
+                </li>
+                <li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="~/Account/Logout">Log out</a>
+                    }
+                    else
+                    {
+                        <a href="~/Account/Login">Login</a>
+                    }
+                </li>
+                <li>
+                    <a href="~/Account/MyAccount">My Account</a>
+                </li>
+                <li>
+                    <a href="~/Cart/Index">
+                        <img src="~/img/cart-icon.png" alt="Cart Icon" width="24" height="20" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    @RenderBody()
+
+    <footer>
+        <div class="col">
+            <img class="logo" width="100%" src="~/img/logo.png" alt="logo" />
+            <h4>Contact</h4>
+            <p>
+                <strong>Address:</strong> Ataköy Mahallesi, 34. Sokak No: 12, Bakırköy, Istanbul
+            </p>
+            <p>
+                <strong>Phone:</strong> +90 212 345 67 89
+            </p>
+            <p>
+                <strong>Hours:</strong> 9:00 - 20:00, Mon - Sat
+            </p>
+        </div>
+        <div class="col">
+            <h4><strong>About</strong></h4>
+            <a href="~/About"><strong>About us</strong></a>
+            <a href="~/FAQ"><strong>FAQ</strong></a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="~/Account/MyAccount"><strong>My Account</strong></a>
+                <a href="~/Account/Logout"><strong>Log out</strong></a>
+            }
+            else
+            {
+                <a href="~/Account/Register"><strong>Register</strong></a>
+                <a href="~/Account/Login"><strong>Login</strong></a>
+            }
+            <a href="~/Account/ViewOrders"><strong>Track My Order</strong></a>
+            <a href="~/Contact"><strong>Contact</strong></a>
+        </div>
+        <div class="col">
+            <h4>Secured Payment Gateways</h4>
+            <img src="~/img/pay/pay.png" alt="Pay" />
+        </div>
+    </footer>
+    <script src="~/scripts/script.js"></script>
+    <script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+</html>

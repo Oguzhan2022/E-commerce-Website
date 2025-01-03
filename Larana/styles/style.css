@@ -1,0 +1,401 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+h1, h2, h4 {
+  color: #000000;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h2 {
+  font-size: 46px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+#header {
+  background: #ffffff;
+  padding: 10px 80px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#navbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#navbar li {
+  display: inline-block;
+  list-style: none;
+  padding: 0 20px;
+}
+
+#navbar li:last-child {
+  top: 0;
+}
+
+#navbar li a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+}
+
+#navbar li a:hover,
+#navbar li a.active {
+  color: #007BFF;
+}
+
+#main {
+    background-image: url("../img/bg-img.jpg");
+    background-size: cover;
+    height: 1000px;
+    width: 100%;
+    background-position: center;
+    padding-top: 200px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+#main h1, #main h4 {
+  color: #007BFF;
+}
+
+#main button {
+  background-color: transparent;
+  color: #007BFF;
+  border: 0;
+  padding-top: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#main button:hover {
+  color: #0056b3;
+}
+
+#product-section {
+  text-align: center;
+  padding: 10px 10px;
+}
+
+#product-section .products {
+  padding-top: 20px;
+  margin: auto;
+  text-align: center;
+  max-width: 1600px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#product-section .product {
+  cursor: pointer;
+  box-shadow: 20px 20px 30px rgba(116, 99, 99, 0.02);
+  margin: 15px;
+  transition: transform 0.2s ease-in-out;
+  flex-basis: 30%;
+  min-width: 250px;
+  max-width: 450px;
+  padding: 10px 12px;
+  border: 2px solid #007BFF;
+  border-radius: 10px;
+}
+
+#product-section .product img.sneaker {
+  width: 100%;
+  border-radius: 10px;
+}
+
+#product-section .product:hover {
+  box-shadow: 20px 20px 54px rgba(28, 77, 161, 0.06);
+  transform: scale(1.05);
+}
+
+#product-section .product .description {
+  padding: 12px 0;
+  text-align: start;
+}
+
+#product-section .product .description a {
+  font-size: 12px;
+  color: #050505b6;
+  text-decoration: none;
+}
+
+#product-section .product .description a:hover {
+  color: #007BFF;
+  text-decoration: underline;
+}
+
+#product-section .product .description h5 {
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+#product-section .product .description h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #3482d4;
+}
+
+#free-shipping-banner {
+  background-color: #007BFF;
+  color: white;
+  text-align: center;
+  padding: 5% 0;
+  margin: 40px 0;
+}
+
+#free-shipping-banner h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+footer {
+  background-color: #ffffff71;
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 15%;
+}
+
+footer .col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+footer h4 {
+  font-size: 14px;
+  padding-bottom: 20px;
+}
+
+footer p, footer a {
+  font-size: 13px;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+#about-us {
+  padding: 60px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+#about-us h1 {
+  font-size: 48px;
+  color: #007BFF;
+  margin-bottom: 20px;
+}
+
+#about-us p {
+  font-size: 18px;
+  color: #333;
+  max-width: 800px;
+  margin: 20px auto;
+  line-height: 1.6;
+}
+
+#about-us h2 {
+  font-size: 32px;
+  margin-top: 40px;
+}
+
+#two {
+  color: #0068d8;
+}
+
+#three {
+  color: #003d7e;
+}
+
+#four {
+  color: #002752;
+}
+
+#about-us ul {
+  font-size: 16px;
+  color: #555;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0;
+}
+
+#about-us ul li {
+  text-align: left;
+  padding: 10px 0;
+  position: relative;
+}
+
+#contact-us {
+  padding: 60px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+#contact-us h1 {
+  font-size: 36px;
+  color: #007BFF;
+  margin-bottom: 20px;
+}
+
+#contact-us p {
+  font-size: 18px;
+  color: #333;
+  max-width: 600px;
+  margin: 20px auto;
+  line-height: 1.6;
+}
+
+#contact-us form {
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+#contact-us label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+#contact-us input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#contact-us textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 300px;
+}
+
+#contact-us button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#contact-us button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 880px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  #header {
+    padding: 10px;
+    text-align: center;
+  }
+
+  #main {
+    height: 700px;
+    padding: 0 20px;
+    padding-top: 100px;
+  }
+
+  #navbar {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  #navbar li {
+    padding: 10px 15px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  #product-section .products {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #product-section .product {
+    width: 90%;
+    max-width: 400px;
+    margin: 10px;
+  }
+
+  #free-shipping-banner h2 {
+    font-size: 18px;
+    padding: 10% 0;
+  }
+
+  footer {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 10px;
+  }
+
+  footer .col {
+    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  footer .logo {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  footer .payment-gateways img {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  #about-us {
+    padding: 40px 20px;
+  }
+
+  #about-us h1 {
+    font-size: 32px;
+  }
+
+  #about-us h2 {
+    font-size: 24px;
+  }
+
+  #about-us p, #about-us ul {
+    font-size: 16px;
+    max-width: 90%;
+  }
+}

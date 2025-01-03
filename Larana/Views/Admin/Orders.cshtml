@@ -1,0 +1,316 @@
+﻿@model IEnumerable<Larana.Controllers.AdminController.OrderViewModel>
+
+@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<h2 class="page-title">All Orders</h2>
+
+<div class="order-list">
+    @foreach (var order in Model)
+    {
+<div class="order-card">
+    <div class="order-summary">
+        <div class="order-info">
+            <span class="order-id"><strong>Order ID:</strong> <span class="highlight-id">@order.Id</span></span>
+            <span class="order-date"><strong>Date:</strong> <span class="highlight-date">@order.OrderDate.ToString("MM/dd/yyyy")</span></span>
+            <span class="order-status"><strong>Status:</strong> <span class="highlight-status">@order.Status</span></span>
+            <span class="order-amount"><strong>Total:</strong> <span class="highlight-total">@order.TotalAmount.ToString("C")</span></span>
+        </div>
+        <button class="btn btn-primary toggle-details" data-target="#details-@order.Id">Details</button>
+    </div>
+    <div class="order-details" id="details-@order.Id" style="display: none;">
+        <div class="details-container">
+            <h4>Order Details</h4>
+            <div class="order-recipient">
+                <p><strong>Customer Name:</strong> @order.UserId</p>
+                <p><strong>Recipient Name:</strong> @order.RecipientName</p>
+                <p><strong>Shipping Company:</strong> @order.ShippingCompany</p>
+                <p><strong>Address:</strong> @order.Address</p>
+                <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
+            </div>
+            <h4>Products</h4>
+            <div class="product-list">
+                @foreach (var product in order.OrderDetails)
+                {
+<div class="product-item" onclick="location.href='/Shop/Details/@product.ProductId'">
+    <img src="@Url.Content("~/" + product.PhotoPath)" alt="@product.ProductName" class="product-image" />
+    <div class="product-info">
+        <span class="product-name">@product.ProductName</span>
+        <span class="product-quantity">@product.Quantity x @product.UnitPrice.ToString("C")</span>
+        <span class="product-total"><strong>Subtotal:</strong> @(string.Format("{0:C}", product.Quantity * product.UnitPrice))</span>
+    </div>
+</div>}
+            </div>
+
+            <form action="@Url.Action("UpdateOrderStatus", "Admin")" method="post" class="status-form">
+                <input type="hidden" name="orderId" value="@order.Id" />
+                <label for="status-@order.Id" class="status-label">Status:</label>
+                <select name="newStatus" id="status-@order.Id" class="form-select custom-select">
+                    <option value="Pending" @(order.Status == "Pending" ? "selected" : "")>Pending</option>
+                    <option value="Completed" @(order.Status == "Completed" ? "selected" : "")>Completed</option>
+                    <option value="Cancelled" @(order.Status == "Cancelled" ? "selected" : "")>Cancelled</option>
+                </select>
+                <button type="submit" class="btn btn-success custom-update-btn">Update</button>
+            </form>
+        </div>
+    </div>
+</div>}
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".toggle-details");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const targetId = this.getAttribute("data-target");
+                const detailsRow = document.querySelector(targetId);
+                const isVisible = detailsRow.style.display === "block";
+
+                document.querySelectorAll(".order-details").forEach(details => {
+                    details.style.display = "none";
+                });
+                document.querySelectorAll(".toggle-details").forEach(btn => {
+                    btn.textContent = "Details";
+                });
+
+                detailsRow.style.display = isVisible ? "none" : "block";
+                this.textContent = isVisible ? "Details" : "Hide Details";
+            });
+        });
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        margin: 20px 0;
+    }
+
+    .order-list {
+        max-width: 1000px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-summary {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .order-info {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .order-id,
+    .order-date,
+    .order-status,
+    .order-amount {
+        font-size: 1rem;
+        color: #555;
+        font-weight: bold;
+    }
+
+    .highlight-id {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .highlight-date {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .highlight-status {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    .highlight-total {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .order-details {
+        padding: 20px;
+        display: none;
+        background-color: #f8f9fa;
+        border-top: 1px solid #ddd;
+    }
+
+    .details-container {
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .product-item {
+        width: 250px; /* Fixed width */
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .product-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .product-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 15px;
+    }
+
+    .product-name {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .product-quantity {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .status-form {
+        margin-top: 20px;
+    }
+
+    .form-select {
+        width: 200px;
+        padding: 10px;
+        font-size: 1rem;
+        color: #555;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .custom-update-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+        .custom-update-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+    .status-label {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-top: 20px;
+        justify-content: center;
+    }
+
+    .product-item {
+        width: 220px; /* Adjusted for better alignment */
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .product-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .product-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+        border-radius: 4px;
+    }
+
+    .product-info {
+        margin-top: 10px;
+    }
+
+
+    .product-quantity {
+        font-size: 0.9rem;
+        color: #555;
+    }
+</style>

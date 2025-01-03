@@ -1,0 +1,376 @@
+﻿@model IEnumerable<Larana.Models.Product>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="search-bar-container">
+    <input type="text" id="searchInput" placeholder="Search for products..." />
+    <button id="searchButton" class="btn">Search</button>
+</div>
+<section id="shop-page">
+    <div class="container">
+
+
+        <aside class="sidebar">
+            <h4>Filter</h4>
+            <form id="filterForm" method="get" action="@Url.Action("Index", "Shop")">
+                <h5>Categories</h5>
+                @foreach (var category in ViewBag.Categories as List<string>)
+                {
+                    var selectedCategories = ViewBag.SelectedCategories as string[];
+                    <div>
+                        <input type="checkbox" name="category" value="@category" id="category-@category"
+                               @(selectedCategories != null && selectedCategories.Contains(category) ? "checked" : "") />
+                        <label for="category-@category">@category</label>
+                    </div>
+                }
+
+                <h5>Brands</h5>
+                @foreach (var brand in ViewBag.Brands as List<string>)
+                {
+                    var selectedBrands = ViewBag.SelectedBrands as string[];
+                    <div>
+                        <input type="checkbox" name="brand" value="@brand" id="brand-@brand"
+                               @(selectedBrands != null && selectedBrands.Contains(brand) ? "checked" : "") />
+                        <label for="brand-@brand">@brand</label>
+                    </div>
+                }
+
+                <h5>Price Range</h5>
+                <input type="number" name="minPrice" placeholder="Min" value="@ViewBag.MinPrice" class="price-input" />
+                <input type="number" name="maxPrice" placeholder="Max" value="@ViewBag.MaxPrice" class="price-input" />
+
+                <h5>Sort By</h5>
+                <select name="sort" class="custom-dropdown">
+                    <option value="newest" @(ViewBag.Sort == "newest" ? "selected" : "")>Newest</option>
+                    <option value="low-to-high" @(ViewBag.Sort == "low-to-high" ? "selected" : "")>Price: Low to High</option>
+                    <option value="high-to-low" @(ViewBag.Sort == "high-to-low" ? "selected" : "")>Price: High to Low</option>
+                    <option value="best-sellers" @(ViewBag.Sort == "best-sellers" ? "selected" : "")>Best Sellers</option>
+                    <option value="new-products" @(ViewBag.Sort == "new-products" ? "selected" : "")>New Products</option>
+                </select>
+
+                <button type="submit" class="btn">Apply Filter</button>
+            </form>
+        </aside>
+
+        <div class="main-content">
+            <div id="product-section">
+                <div class="products" id="product-container"></div>
+                <div id="loading" style="display: none; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    let pageNumber = 1;
+    let isLoading = false;
+
+    async function loadMoreProducts() {
+        if (isLoading) return;
+        isLoading = true;
+
+        try {
+            const formData = new FormData(document.getElementById("filterForm"));
+            const params = new URLSearchParams(formData);
+            params.append("page", pageNumber);
+            const response = await fetch(`/Shop/LoadMoreProducts?${params.toString()}`);
+            const newProducts = await response.text();
+            document.getElementById("product-container").innerHTML += newProducts;
+            pageNumber++;
+        } catch (error) {
+            console.error("Error loading more products:", error);
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    window.addEventListener("scroll", () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+            loadMoreProducts();
+        }
+    });
+
+    function updateSorting() {
+        const sortDropdown = document.getElementById("sort");
+        const sortInput = document.getElementById("sortHiddenInput");
+        sortInput.value = sortDropdown.value;
+        document.getElementById("filterForm").submit();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadMoreProducts();
+    });
+
+$(document).ready(function () {
+    $("#searchButton").on("click", function () {
+        var query = $("#searchInput").val().trim();
+
+        $("#product-container").empty();
+
+        if (query.length === 0) {
+            $("#product-container").html("<p>Showing all products...</p>");
+        } else {
+            $("#product-container").html("<p>Loading...</p>");
+        }
+
+        $.ajax({
+            url: '@Url.Action("SearchProducts", "Shop")',
+            type: 'GET',
+            data: { query: query },
+            success: function (data) {
+                if (data.length === 0) {
+                    $("#product-container").html("<p>No products found.</p>");
+                    return;
+                }
+
+                var html = "";
+                $.each(data, function (index, product) {
+                    html += `
+                        <div class="product">
+                            <a href="/Shop/Details/${product.Id}">
+                                <img src="/${product.PhotoPath}" alt="${product.Name}" />
+                                <div class="description">
+                                    <h5>${product.Name}</h5>
+                                    <h4>${product.Price} TL</h4>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                });
+
+                $("#product-container").html(html);
+            },
+            error: function () {
+                alert("An error occurred while searching for products.");
+            }
+        });
+    });
+
+    $("#searchInput").on("keypress", function (e) {
+        if (e.which === 13) {
+            $("#searchButton").click();
+        }
+    });
+});
+
+
+</script>
+
+<style>
+    .search-bar-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px auto;
+        max-width: 1000px;
+    }
+
+        .search-bar-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-bar-container .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+            .search-bar-container .btn:hover {
+                background-color: #0056b3;
+            }
+
+
+    .sidebar select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 10px 10px;
+    }
+
+    .container {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .sidebar {
+        flex: 0 0 300px;
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        font-family: 'Arial', sans-serif;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+    }
+
+        .sidebar h4 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-bottom: 15px;
+        }
+
+        .sidebar h5 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar label {
+            font-size: 14px;
+            color: #555;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        .sidebar input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .sidebar input[type="number"],
+        .price-input {
+            width: calc(50% - 10px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+    .custom-dropdown {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        color: #333;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 10px 10px;
+    }
+
+    .sidebar .btn {
+        display: block;
+        width: 100%;
+        background-color: #007BFF;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+        .sidebar .btn:hover {
+            background-color: #0056b3;
+        }
+
+    .main-content {
+        flex: 1;
+    }
+
+    #product-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+
+        #product-section .product {
+            flex: 0 0 300px;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid #007BFF;
+            border-radius: 8px;
+            padding: 10px;
+            transition: transform 0.3s ease;
+            background-color: #fff;
+        }
+
+            #product-section .product:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            }
+
+            #product-section .product img {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+
+            #product-section .product h5 {
+                font-size: 16px;
+                color: #333;
+                margin: 10px 0 5px;
+            }
+
+            #product-section .product h4 {
+                font-size: 18px;
+                color: #007BFF;
+                font-weight: bold;
+            }
+
+    @@media (max-width: 1024px) {
+        .container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            max-height: none;
+        }
+
+        #product-section .product {
+            flex: 0 0 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        #product-section .product {
+            flex: 0 0 calc(100% - 20px);
+            max-width: calc(100% - 20px);
+        }
+    }
+
+    /* Genel bağlantı stilleri */
+    a {
+        text-decoration: none; /* Alt çizgiyi kaldırır */
+        color: inherit; /* Bağlantının renklerini metin rengine uyarlar */
+        cursor: pointer; /* Bağlantılarda imleci işaretleme yapar */
+    }
+</style>

@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="page-title">Welcome to the Admin Panel</h2>
+
+<div class="admin-menu">
+    <a href="@Url.Action("CreateUser", "Admin")" class="btn btn-primary">Create Admin User</a>
+    <a href="@Url.Action("Orders", "Admin")" class="btn btn-primary">View Orders</a>
+    <a href="@Url.Action("AddProduct", "Admin")" class="btn btn-primary">Add New Product</a>
+    <button id="edit-product-btn" class="btn btn-primary">Edit Product</button>
+</div>
+
+<div id="edit-product-container" style="display: none; margin-top: 20px; text-align: center;">
+    <input type="number" id="product-id-input" class="form-control" placeholder="Enter Product ID" style="max-width: 300px; margin: 10px auto; display: inline-block;" />
+    <button id="go-to-edit-product" class="btn btn-success">Go to Edit Product</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editProductBtn = document.getElementById("edit-product-btn");
+        const editProductContainer = document.getElementById("edit-product-container");
+        const goToEditProductBtn = document.getElementById("go-to-edit-product");
+        const productIdInput = document.getElementById("product-id-input");
+
+        editProductBtn.addEventListener("click", function () {
+            editProductContainer.style.display = editProductContainer.style.display === "none" ? "block" : "none";
+        });
+
+        goToEditProductBtn.addEventListener("click", function () {
+            const productId = productIdInput.value.trim();
+            if (productId) {
+                window.location.href = `/Admin/EditProduct/${productId}`;
+            } else {
+                alert("Please enter a valid product ID.");
+            }
+        });
+    });
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .admin-menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 40px;
+    }
+
+    .btn {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        color: #ffffff;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+
+    .btn:hover {
+        text-decoration: none;
+    }
+
+    .form-control {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+</style>

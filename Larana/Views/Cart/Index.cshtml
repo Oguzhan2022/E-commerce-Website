@@ -1,0 +1,392 @@
+﻿@model Larana.Models.Cart
+
+<div class="cart-container">
+    <h1 class="cart-title">My Cart</h1>
+    @if (!Model.CartItems.Any())
+    {
+        <div class="empty-cart-message">
+            Your cart is empty.
+        </div>
+    }
+    else
+    {
+        <table class="table cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", "Shop", new { id = item.ProductId })" class="product-cell-link">
+                                <div class="cart-product-content">
+                                    <img src="@Url.Content("~/" + item.Product.PhotoPath)" alt="@item.Product.Name" class="cart-product-image" />
+                                    <span>@item.Product.Name</span>
+                                </div>
+                            </a>
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.Price.ToString("C")</td>
+                        <td>
+                            <button class="btn btn-danger btn-remove" onclick="removeFromCart(@item.ProductId)">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3 class="cart-total">Total: @Model.CartItems.Sum(ci => ci.Quantity * ci.Product.Price).ToString("C")</h3>
+        <div class="text-right">
+            <button class="btn btn-success btn-checkout" onclick="toggleCheckoutForm()">Checkout</button>
+        </div>
+
+        <div id="checkout-form" class="checkout-form-container" style="display: none;">
+            <h3 class="checkout-form-title">Checkout Details</h3>
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label for="RecipientName">Recipient Name:</label>
+                    <input type="text" id="RecipientName" name="RecipientName" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="ShippingCompany">Shipping Company:</label>
+                    <select id="ShippingCompany" name="ShippingCompany" class="form-control" required>
+                        <option value="Aras Kargo">Aras Kargo</option>
+                        <option value="Yurtiçi Kargo">Yurtiçi Kargo</option>
+                        <option value="Mng">Mng</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Address">Address:</label>
+                    <input type="text" id="Address" name="Address" class="form-control" value="@ViewBag.Address" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone Number:</label>
+                    <input type="tel" id="PhoneNumber" name="PhoneNumber" class="form-control" value="@ViewBag.PhoneNumber" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="CardholderName">Cardholder Name:</label>
+                    <input type="text" id="CardholderName" name="CardholderName" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="CardInfo">Card Number:</label>
+                    <input type="text" id="CardInfo" name="CardInfo" class="form-control" placeholder="1234-5678-9876-5432" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="ExpirationDate">Expiration Date:</label>
+                    <input type="text" id="ExpirationDate" name="ExpirationDate" class="form-control" placeholder="MM/YY" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="CVV">CVV:</label>
+                    <input type="text" id="CVV" name="CVV" class="form-control" placeholder="123" required />
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="submitCheckout()">Submit</button>
+            </form>
+        </div>
+    }
+</div>
+
+
+<script>
+function removeFromCart(productId) {
+    $.ajax({
+        url: '@Url.Action("RemoveFromCart", "Cart")',
+        type: 'POST',
+        data: { productId: productId },
+        success: function (response) {
+            if (response.success) {
+                alert("The product has been successfully removed from your cart.");
+                location.reload();
+            } else {
+                alert("Unable to remove the product: " + response.message);
+            }
+        },
+        error: function () {
+            alert("An error occurred while removing the product. Please try again later.");
+        }
+    });
+}
+
+function toggleCheckoutForm() {
+    const form = document.getElementById("checkout-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+function submitCheckout() {
+    const formData = {
+        RecipientName: document.getElementById("RecipientName").value,
+        ShippingCompany: document.getElementById("ShippingCompany").value,
+        Address: document.getElementById("Address").value,
+        PhoneNumber: document.getElementById("PhoneNumber").value,
+        CardholderName: document.getElementById("CardholderName").value,
+        CardInfo: document.getElementById("CardInfo").value,
+        ExpirationDate: document.getElementById("ExpirationDate").value,
+        CVV: document.getElementById("CVV").value
+    };
+
+    // Client-side validation for all fields
+    if (!formData.RecipientName.trim()) {
+        alert("Please enter the recipient's name.");
+        return;
+    }
+    if (!formData.ShippingCompany.trim()) {
+        alert("Please select a shipping company.");
+        return;
+    }
+    if (!formData.Address.trim()) {
+        alert("Please provide your delivery address.");
+        return;
+    }
+    if (!formData.PhoneNumber.trim()) {
+        alert("Please provide your phone number.");
+        return;
+    }
+    if (!formData.CardholderName.trim()) {
+        alert("Please provide the cardholder's name.");
+        return;
+    }
+    if (!formData.CardInfo.trim() || !/^\d{16}$/.test(formData.CardInfo.replace(/-/g, ""))) {
+        alert("Please provide a valid 16-digit card number.");
+        return;
+    }
+    if (!formData.ExpirationDate.trim() || !/^\d{2}\/\d{2}$/.test(formData.ExpirationDate)) {
+        alert("Please provide a valid expiration date in MM/YY format.");
+        return;
+    }
+    if (!formData.CVV.trim() || !/^\d{3}$/.test(formData.CVV)) {
+        alert("Please provide a valid 3-digit CVV code.");
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("Checkout", "Cart")',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert("Your order has been successfully placed. Thank you for shopping with us!");
+                window.location.href = '@Url.Action("Index", "Cart")';
+            } else {
+                alert("Unable to place your order: " + response.message);
+            }
+        },
+        error: function () {
+            alert("An error occurred while completing your checkout. Please try again later.");
+        }
+    });
+}
+
+
+</script>
+
+<style>
+    .cart-container {
+        max-width: 900px;
+        margin: 50px auto;
+        background: linear-gradient(145deg, #ffffff, #f1f1f1);
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    .cart-title {
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .cart-table th,
+        .cart-table td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .cart-table th {
+            background: #4CAF50;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .cart-table td {
+            background: #fff;
+            color: #444;
+            font-size: 16px;
+            vertical-align: middle;
+        }
+
+        .cart-table tr:nth-child(even) td {
+            background: #f9f9f9;
+        }
+
+    .product-cell-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        width: 100%;
+        height: 100%;
+    }
+
+    .cart-product-content {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .cart-product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-total {
+        text-align: right;
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .btn-remove {
+        background-color: #FF5555;
+        color: #fff;
+        border: none;
+        padding: 8px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            background-color: #E04444;
+            transform: scale(1.05);
+        }
+
+    .btn-checkout {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 20px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .btn-checkout:hover {
+            background-color: #45A049;
+            transform: translateY(-2px);
+        }
+
+    .empty-cart-message {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #999;
+        margin-top: 50px;
+    }
+
+    .checkout-form-container {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-form-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .cart-container {
+            padding: 20px;
+        }
+
+        .cart-table th,
+        .cart-table td {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .cart-product-content {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cart-product-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+        }
+
+        .cart-title {
+            font-size: 24px;
+        }
+    }
+</style>

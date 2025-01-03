@@ -1,0 +1,146 @@
+﻿@model Larana.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="page-title">Add New Product</h2>
+
+<div id="success-toast" class="toast-container" style="display: none;">
+    <div class="toast-message">
+        Product added successfully!
+    </div>
+</div>
+
+@using (Html.BeginForm("AddProduct", "Admin", FormMethod.Post, new { id = "addProductForm" }))
+{
+    <div class="form-container">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, "Product Name")
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Brand, "Brand")
+            @Html.TextBoxFor(model => model.Brand, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Brand)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category, "Category")
+            @Html.TextBoxFor(model => model.Category, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Category)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhotoPath, "Photo File Name (e.g., f1.jpg)")
+            @Html.TextBoxFor(model => model.PhotoPath, new { @class = "form-control", placeholder = "e.g., f1.jpg" })
+            @Html.ValidationMessageFor(model => model.PhotoPath)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Stock, "Stock")
+            @Html.TextBoxFor(model => model.Stock, new { @class = "form-control", type = "number", min = 0 })
+            @Html.ValidationMessageFor(model => model.Stock)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price, "Price")
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control", type = "number", step = "0.01", min = "0" })
+            @Html.ValidationMessageFor(model => model.Price)
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("addProductForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        const toast = document.getElementById("success-toast");
+                        toast.style.display = "block";
+
+                        setTimeout(() => {
+                            toast.style.display = "none";
+                            window.location.reload();
+                        }, 3000);
+                    } else {
+                        alert("Failed to add product. Please try again.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
+        });
+    });
+</script>
+
+<style>
+    .page-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 1rem;
+    }
+
+    .toast-message {
+        font-weight: bold;
+    }
+</style>

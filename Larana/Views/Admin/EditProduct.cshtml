@@ -1,0 +1,195 @@
+﻿@model Larana.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="page-title">Manage Product</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="product-container">
+    <div class="form-section">
+        <h3>Update Stock & Price</h3>
+        @using (Html.BeginForm("EditProduct", "Admin", FormMethod.Post))
+        {
+            @Html.HiddenFor(model => model.Id)
+            <input type="hidden" name="actionType" value="UpdateStockPrice" />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Stock, "Stock")
+                @Html.TextBoxFor(model => model.Stock, new { @class = "form-control", type = "number", min = 0 })
+                @Html.ValidationMessageFor(model => model.Stock)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Price, "Price")
+                @Html.TextBoxFor(model => model.Price, new { @class = "form-control", type = "text", value = Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture) })
+                @Html.ValidationMessageFor(model => model.Price)
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Stock & Price</button>
+        }
+    </div>
+
+    <div class="form-section">
+        <h3>Sales Information</h3>
+        <p><strong>Total Sales:</strong> @Model.Sales</p>
+    </div>
+
+    <div class="form-section">
+        <h3>Delete Product</h3>
+        @using (Html.BeginForm("EditProduct", "Admin", FormMethod.Post))
+        {
+            @Html.HiddenFor(model => model.Id)
+            <input type="hidden" name="actionType" value="DeleteProduct" />
+
+            <button type="submit" class="btn btn-danger">Delete Product</button>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 3rem;
+        margin: 50px 0 30px; /* Updated margin for modern look */
+        color: #343a40;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+    .product-container {
+        max-width: 900px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .product-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+    .form-section {
+        margin-bottom: 40px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+        .form-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #495057;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #495057;
+        background-color: #fdfdfd;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-3px);
+        }
+
+    .alert {
+        padding: 15px;
+        font-size: 1rem;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    .alert-success {
+        background-color: #28a745;
+        border: 1px solid #218838;
+    }
+
+    .alert-danger {
+        background-color: #dc3545;
+        border: 1px solid #c82333;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #343a40;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+        p strong {
+            color: #007bff;
+        }
+</style>

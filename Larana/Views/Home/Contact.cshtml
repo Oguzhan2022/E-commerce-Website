@@ -1,0 +1,19 @@
+﻿<section id="contact-us">
+    <h1>Contact Us</h1>
+    <p>If you have any questions, feel free to send us a message:</p>
+    <form id="contact-form">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" class="form-input" placeholder="Enter subject" required>
+        <label for="message">Message:</label>
+        <textarea id="message" class="form-textarea" placeholder="Enter your message" required></textarea>
+        <button type="button" id="send-button" class="form-button" onclick="openEmail()">Send Message</button>
+    </form>
+</section>
+
+<script>
+    function openEmail() {
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        window.location.href = `mailto:contact@larana.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    }
+</script>

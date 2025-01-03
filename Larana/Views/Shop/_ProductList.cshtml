@@ -1,0 +1,12 @@
+﻿@foreach (var product in Model)
+{
+    <div class="product">
+        <a href="@Url.Action("Details", "Shop", new { id = product.Id })">
+            <img class="sneaker" src="@Url.Content("~/" + product.PhotoPath)" alt="@product.Name" />
+            <div class="description">
+                <h5>@product.Name</h5>
+                <h4>@string.Format("{0:N}", product.Price) TL</h4>
+            </div>
+        </a>
+    </div>
+}
