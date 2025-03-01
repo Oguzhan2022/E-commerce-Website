@@ -9,3 +9,6 @@ Setup Instructions:
 
 Publish the Larana.Models.DbAccount.dacpac and LaranaDB.dacpac files to your database server. 
 Build and run the project using Visual Studio or another compatible development environment.
+
+
+Demo Video: https://drive.google.com/file/d/1_0717y9q1uwDL-TAeTa4Djy7nNhAOyBJ
