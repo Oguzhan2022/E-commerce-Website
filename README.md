@@ -88,13 +88,15 @@ To get a local copy up and running, follow these simple steps.
 
 ## 📂 Project Structure
 
-The repository contains the following key files and directories:
-├── Larana/ # The main ASP.NET project folder
-│ ├── Controllers/ # Logic for handling user requests
-│ ├── Models/ # Data models and database context
-│ ├── Views/ # UI files (.cshtml)
-│ ├── Content/ # CSS stylesheets
-│ └── Scripts/ # JavaScript files
-├── Larana.sln # Visual Studio Solution file
-├── LaranaDB.dacpac # Database schema for the main application
+
+```
+├── Larana/                # The main ASP.NET project folder
+│   ├── Controllers/       # Logic for handling user requests
+│   ├── Models/            # Data models and database context
+│   ├── Views/             # UI files (.cshtml)
+│   ├── Content/           # CSS stylesheets
+│   └── Scripts/           # JavaScript files
+├── Larana.sln             # Visual Studio Solution file
+├── LaranaDB.dacpac        # Database schema for the main application
 └── Larana.Models.DbAccount.dacpac # Database schema for user accounts
+```
